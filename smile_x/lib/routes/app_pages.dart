@@ -20,6 +20,7 @@ import 'package:smile_x/features/splash/view/screens/splash_screen.dart';
 
 import 'app_routes.dart';
 
+//app pages
 class AppPages {
   static final List<GetPage> pages = [
     GetPage(
