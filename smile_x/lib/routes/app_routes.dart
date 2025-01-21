@@ -19,4 +19,6 @@ class AppRoutes {
   static const String adjustTreatmentStartDate = '/adjustTreatmentStartDate';
   static const String selectAligner = '/selectAligner';
   static const String supportAndHelp = '/supportAndHelp';
+  static const String uploadsHistory = '/uploadsHistory';
+  static const String uploadsHistoryDetails = '/uploadsHistoryDetails';
 }

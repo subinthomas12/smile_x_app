@@ -1,59 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-double screenHeight = Get.height;
-double screenWidth = Get.width;
+double get screenHeight => Get.height;
+double get screenWidth => Get.width;
 
-final screenHeight05 = screenHeight * 0.005;
-final screenHeight1 = screenHeight * 0.01;
-final screenHeight2 = screenHeight * 0.02;
-final screenHeight3 = screenHeight * 0.03;
-final screenHeight4 = screenHeight * 0.04;
-final screenHeight5 = screenHeight * 0.05;
-final screenHeight6 = screenHeight * 0.06;
-final screenHeight7 = screenHeight * 0.07;
-final screenHeight8 = screenHeight * 0.08;
-final screenHeight9 = screenHeight * 0.09;
-final screenHeight10 = screenHeight * 0.10;
+// Height multipliers
+double screenHeightFactor(double factor) => screenHeight * factor;
+double screenWidthFactor(double factor) => screenWidth * factor;
 
-final screenWidth1 = screenWidth * 0.01;
-final screenWidth2 = screenWidth * 0.02;
-final screenWidth3 = screenWidth * 0.03;
-final screenWidth4 = screenWidth * 0.04;
-final screenWidth5 = screenWidth * 0.05;
-final screenWidth6 = screenWidth * 0.06;
-final screenWidth7 = screenWidth * 0.07;
-final screenWidth8 = screenWidth * 0.08;
-final screenWidth9 = screenWidth * 0.09;
-final screenWidth10 = screenWidth * 0.10;
-final screenWidth35 = screenWidth * 0.35;
+// Predefined screen height factors
+double get screenHeight05 => screenHeightFactor(0.005);
+double get screenHeight1 => screenHeightFactor(0.01);
+double get screenHeight2 => screenHeightFactor(0.02);
+double get screenHeight3 => screenHeightFactor(0.03);
+double get screenHeight4 => screenHeightFactor(0.04);
+double get screenHeight5 => screenHeightFactor(0.05);
+double get screenHeight6 => screenHeightFactor(0.06);
+double get screenHeight7 => screenHeightFactor(0.07);
+double get screenHeight8 => screenHeightFactor(0.08);
+double get screenHeight9 => screenHeightFactor(0.09);
+double get screenHeight10 => screenHeightFactor(0.10);
 
-final kHeight1 = SizedBox(height: Get.height * 0.01);
-final kHeight2 = SizedBox(height: Get.height * 0.02);
-final kHeight3 = SizedBox(height: Get.height * 0.03);
-final kHeight4 = SizedBox(height: Get.height * 0.04);
-final kHeight5 = SizedBox(height: Get.height * 0.05);
-final kHeight6 = SizedBox(height: Get.height * 0.06);
-final kHeight7 = SizedBox(height: Get.height * 0.07);
-final kHeight8 = SizedBox(height: Get.height * 0.08);
-final kHeight9 = SizedBox(height: Get.height * 0.09);
-final kHeight10 = SizedBox(height: Get.height * 0.10);
+// Predefined screen width factors
+double get screenWidth1 => screenWidthFactor(0.01);
+double get screenWidth2 => screenWidthFactor(0.02);
+double get screenWidth3 => screenWidthFactor(0.03);
+double get screenWidth4 => screenWidthFactor(0.04);
+double get screenWidth5 => screenWidthFactor(0.05);
+double get screenWidth6 => screenWidthFactor(0.06);
+double get screenWidth7 => screenWidthFactor(0.07);
+double get screenWidth8 => screenWidthFactor(0.08);
+double get screenWidth9 => screenWidthFactor(0.09);
+double get screenWidth10 => screenWidthFactor(0.10);
+double get screenWidth35 => screenWidthFactor(0.35);
 
-final kWidth1 = SizedBox(width: Get.width * 0.01);
-final kWidth2 = SizedBox(width: Get.width * 0.02);
-final kWidth3 = SizedBox(width: Get.width * 0.03);
-final kWidth4 = SizedBox(width: Get.width * 0.04);
-final kWidth5 = SizedBox(width: Get.width * 0.05);
-final kWidth6 = SizedBox(width: Get.width * 0.06);
-final kWidth7 = SizedBox(width: Get.width * 0.07);
-final kWidth8 = SizedBox(width: Get.width * 0.08);
-final kWidth9 = SizedBox(width: Get.width * 0.09);
-final kWidth10 = SizedBox(width: Get.width * 0.10);
+SizedBox kHeight(double factor) => SizedBox(height: screenHeightFactor(factor));
+SizedBox kWidth(double factor) => SizedBox(width: screenWidthFactor(factor));
 
-final double mainTitleSize = screenHeight * 0.03;
-final double subTitleSize = screenHeight * 0.025;
-final double contentSize = screenHeight * 0.02;
-final double smallFontSize = screenHeight * 0.015;
+double get mainTitleSize => screenHeight * 0.025;
+double get subTitleSize => screenHeight * 0.02;
+double get contentSize => screenHeight * 0.016;
+double get smallFontSize => screenHeight * 0.014;
 
-final double iconSize = screenHeight * 0.03;
-final double smallIconSize = screenHeight * 0.02;
+double get wearTimer => screenHeight * 0.035;
+
+double get iconSize => screenHeight * 0.03;
+double get smallIconSize => screenHeight * 0.02;

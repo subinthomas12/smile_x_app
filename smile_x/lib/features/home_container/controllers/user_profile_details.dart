@@ -25,7 +25,7 @@ class UserProfileDetails extends StatelessWidget {
             child: Column(
               children: [
                 const CommonHeader(title: 'Profile'),
-                kHeight3,
+                kHeight(0.03),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -41,7 +41,7 @@ class UserProfileDetails extends StatelessWidget {
                               .formatRegistrationDate(patient.registrationDate),
                           Icons.app_registration_sharp);
                     }),
-                    kHeight1,
+                    kHeight(0.01),
                     Obx(() {
                       final patient = profileController.patient.value;
                       if (patient == null) {
@@ -53,7 +53,7 @@ class UserProfileDetails extends StatelessWidget {
                     }),
                   ],
                 ),
-                kHeight2,
+                kHeight(0.02),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -67,7 +67,7 @@ class UserProfileDetails extends StatelessWidget {
                     ),
                   ],
                 ),
-                kHeight1,
+                kHeight(0.01),
                 Obx(() {
                   final patient = profileController.patient.value;
                   if (patient == null) {
@@ -78,14 +78,14 @@ class UserProfileDetails extends StatelessWidget {
                     children: [
                       _buildUsernameContainer(
                           'Name', patient.patientName, Icons.person),
-                      kHeight1, // Adjust spacing if needed
+                      kHeight(0.01),
                       _buildUsernameContainer(
                           'Age', patient.patientAge, Icons.cake),
-                      kHeight1,
+                      kHeight(0.01),
 
                       _buildUsernameContainer(
                           'Mobile', patient.patientMobile, Icons.phone),
-                      kHeight1,
+                      kHeight(0.01),
                       // _buildUsernameContainer('WhatsApp',
                       //     patient.patientWhatsapp ?? 'N/A', Icons.chat),
                       // kHeight2,
@@ -94,7 +94,7 @@ class UserProfileDetails extends StatelessWidget {
                     ],
                   );
                 }),
-                kHeight1,
+                kHeight(0.01),
                 Obx(() {
                   final patient = profileController.patient.value;
                   if (patient == null) {
@@ -106,7 +106,7 @@ class UserProfileDetails extends StatelessWidget {
                     profileController.getGenderIcon(patient.genderId),
                   );
                 }),
-                kHeight1,
+                kHeight(0.01),
                 Obx(() {
                   final patient = profileController.patient.value;
                   if (patient == null) {
@@ -115,7 +115,7 @@ class UserProfileDetails extends StatelessWidget {
                   return _buildAddressContainer('Address',
                       patient.patientAddress, Icons.location_city_outlined);
                 }),
-                kHeight2,
+                kHeight(0.01),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -129,7 +129,7 @@ class UserProfileDetails extends StatelessWidget {
                     ),
                   ],
                 ),
-                kHeight1,
+                kHeight(0.01),
                 Column(
                   children: [
                     Obx(() {
@@ -141,7 +141,7 @@ class UserProfileDetails extends StatelessWidget {
                       return _buildUsernameContainer(
                           'Username', patient.patientUsername, Icons.person);
                     }),
-                    kHeight1,
+                    kHeight(0.01),
                     Obx(() {
                       final patient = profileController.patient.value;
                       if (patient == null) {
@@ -193,7 +193,7 @@ class UserProfileDetails extends StatelessWidget {
                   fontSize: smallFontSize,
                 ),
               ),
-              kHeight1, // Add spacing between label and value
+              kHeight(0.01),
               // Value text
               Text(
                 value,
@@ -245,7 +245,7 @@ class UserProfileDetails extends StatelessWidget {
                   fontSize: smallFontSize,
                 ),
               ),
-              kHeight2,
+              kHeight(0.02),
               Text(
                 value,
                 style: GoogleFonts.poppins(
@@ -296,7 +296,7 @@ class UserProfileDetails extends StatelessWidget {
                   fontSize: smallFontSize,
                 ),
               ),
-              kHeight2,
+              kHeight(0.02),
               Obx(() {
                 return Text(
                   profileController.isPasswordVisible.value ? value : '******',

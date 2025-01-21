@@ -1,15 +1,17 @@
 import 'package:get/get.dart';
 import 'package:smile_x/core/widgets/work_in_progress.dart';
-import 'package:smile_x/features/forgotPassword/view/screens/forgotPassword.dart';
-import 'package:smile_x/features/forgotPassword/view/widgets/emailVerification.dart';
-import 'package:smile_x/features/forgotPassword/view/widgets/passwordSuccess.dart';
-import 'package:smile_x/features/forgotPassword/view/widgets/resetPassword.dart';
+import 'package:smile_x/features/forgotPassword/view/screens/forgot_password.dart';
+import 'package:smile_x/features/forgotPassword/view/widgets/email_verification.dart';
+import 'package:smile_x/features/forgotPassword/view/widgets/password_success.dart';
+import 'package:smile_x/features/forgotPassword/view/widgets/reset_password.dart';
 import 'package:smile_x/features/home_container/controllers/adjust_treatment.dart';
 import 'package:smile_x/features/home_container/controllers/adjust_treatment_start_date.dart';
 import 'package:smile_x/features/home_container/controllers/adjust_treatment_update.dart';
 import 'package:smile_x/features/home_container/controllers/notifications.dart';
 import 'package:smile_x/features/home_container/controllers/select_aligner.dart';
 import 'package:smile_x/features/home_container/controllers/support_and_help.dart';
+import 'package:smile_x/features/home_container/controllers/uploads_history.dart';
+import 'package:smile_x/features/home_container/controllers/uploads_history_details.dart';
 import 'package:smile_x/features/home_container/controllers/user_profile_details.dart';
 import 'package:smile_x/features/home_container/controllers/what_are_aligner.dart';
 import 'package:smile_x/features/home_container/view/screens/home_container.dart';
@@ -85,7 +87,7 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.adjustTreatment,
-      page: () => AdjustTreatment(),
+      page: () => const AdjustTreatment(),
       transition: Transition.fadeIn,
     ),
     GetPage(
@@ -105,7 +107,7 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.selectAligner,
-      page: () => SelectAligner(),
+      page: () => const SelectAligner(),
       transition: Transition.fadeIn,
     ),
     GetPage(
@@ -113,5 +115,15 @@ class AppPages {
       page: () => SupportAndHelp(),
       transition: Transition.fadeIn,
     ),
+    GetPage(
+      name: AppRoutes.uploadsHistory,
+      page: () => UploadsHistory(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppRoutes.uploadsHistoryDetails,
+      page: () => UploadsHistoryDetails(),
+      transition: Transition.fadeIn,
+    )
   ];
 }

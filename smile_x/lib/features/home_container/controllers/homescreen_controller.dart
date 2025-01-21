@@ -1,19 +1,25 @@
 import 'dart:async';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smile_x/core/constants/colors.dart';
 import 'package:smile_x/core/constants/const.dart';
+import 'package:smile_x/core/utils/common_methods.dart';
 import 'package:smile_x/routes/app_routes.dart';
+import 'package:smile_x/services/api_client.dart';
+import 'package:smile_x/services/api_manager.dart';
 
 class HomeScreenController extends GetxController {
-  // Toggle between 'Wearing' and 'Not Wearing'
   RxBool isWearing = true.obs;
 
-  RxDouble wearingProgress = 0.0.obs;
-  RxDouble notWearingProgress = 0.0.obs;
-  Timer? _wearingProgressTimer;
-  Timer? _notWearingProgressTimer;
+  // RxDouble wearingProgress = 0.0.obs;
+  // RxDouble notWearingProgress = 0.0.obs;
+  // Timer? _wearingProgressTimer;
+  // Timer? _notWearingProgressTimer;
+
+  final ApiManager apiManager = ApiManager(apiClient: ApiClient(Dio()));
+  final CommonMethods commonMethods = CommonMethods();
 
   double wearingProgressValue = 0.0;
   double notWearingProgressValue = 0.0;
@@ -21,57 +27,171 @@ class HomeScreenController extends GetxController {
 
   int selectedUpperIndex = 0;
   int selectedLowerIndex = 0;
+
   final List<String> upperAligners =
       List.generate(10, (index) => 'Upper Aligner #${index + 1}');
   final List<String> lowerAligners =
       List.generate(10, (index) => 'Lower Aligners #${index + 1}');
 
-  @override
-  void onInit() {
-    super.onInit();
-    startWearingProgress();
+  var wearingStatus = <String, String?>{}.obs;
+
+//   @override
+//   void onInit() async {
+//     super.onInit();
+//     startWearingProgress();
+//     // Retrieve wearing status asynchronously and update the observable map
+// //     Map<String, String?> retrievedWearingStatus =
+// //         await commonMethods.getWearingStatus();
+
+// // // Update the observable map with the retrieved values
+// //     wearingStatus.assignAll(retrievedWearingStatus); // Use assignAll for RxMap
+// //     debugPrint("Wearing Status Retrieved: $wearingStatus");
+//   }
+
+//   // Method to start or resume progress for wearing
+//   void startWearingProgress() {
+//     isWearing.value = true;
+//     if (_wearingProgressTimer?.isActive ?? false) return;
+
+//     // Start a periodic timer for wearing progress
+//     _wearingProgressTimer =
+//         Timer.periodic(const Duration(seconds: 60), (timer) {
+//       if (isWearing.value) {
+//         if (wearingProgressValue < 1.0) {
+//           wearingProgressValue += increment;
+//           wearingProgress.value = wearingProgressValue;
+//         } else {
+//           isWearing.value = false;
+//           startNotWearingProgress();
+//         }
+//       }
+//     });
+//   }
+
+//   // Method to start or resume progress for not wearing
+//   void startNotWearingProgress() {
+//     isWearing.value = false;
+//     if (_notWearingProgressTimer?.isActive ?? false) return;
+
+//     // Start a periodic timer for not wearing progress
+//     _notWearingProgressTimer =
+//         Timer.periodic(const Duration(seconds: 60), (timer) {
+//       if (!isWearing.value) {
+//         if (notWearingProgressValue < 1.0) {
+//           notWearingProgressValue += increment;
+//           notWearingProgress.value = notWearingProgressValue;
+//         }
+//       }
+//     });
+//   }
+
+//   // Method to pause the current progress
+//   void pauseProgress() {
+//     if (_wearingProgressTimer?.isActive ?? false) {
+//       _wearingProgressTimer?.cancel();
+//     }
+
+//     if (_notWearingProgressTimer?.isActive ?? false) {
+//       _notWearingProgressTimer?.cancel();
+//     }
+//   }
+
+//   // Method to reset progress (both wearing and not wearing)
+//   void resetProgress() {
+//     wearingProgressValue = 0.0;
+//     notWearingProgressValue = 0.0;
+//     wearingProgress.value = 0.0;
+//     notWearingProgress.value = 0.0;
+//     isWearing.value = true;
+
+//     // Restart the wearing progress
+//     startWearingProgress();
+//   }
+
+//   // Schedule a reset at midnight
+//   void _scheduleDailyReset() {
+//     final now = DateTime.now();
+//     final midnight = DateTime(now.year, now.month, now.day + 1);
+//     final durationUntilMidnight = midnight.difference(now);
+
+//     // Set a timer to reset progress every day at midnight
+//     Timer(durationUntilMidnight, () {
+//       resetProgress();
+//       _scheduleDailyReset(); // Schedule the next reset
+//     });
+//   }
+
+//   // Method to manually start progress (if needed)
+//   void manualStartProgress() {
+//     startWearingProgress();
+//   }
+
+// Navigate to select aligner screen
+  void navigateToSelectAligner() {
+    Get.toNamed(AppRoutes.selectAligner);
   }
 
-  // Method to start or resume progress for wearing
-  void startWearingProgress() {
-    isWearing.value = true;
-    if (_wearingProgressTimer?.isActive ?? false) return;
-
-    // Start a periodic timer for wearing progress
-    _wearingProgressTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (isWearing.value) {
-        // Track wearing progress
-        if (wearingProgressValue < 1.0) {
-          wearingProgressValue += increment;
-          wearingProgress.value = wearingProgressValue;
-        } else {
-          // Switch to not wearing once wearing reaches 1.0
-          isWearing.value = false;
-          startNotWearingProgress(); // Start not wearing progress when wearing reaches 1.0
-        }
-      }
-    });
+  // Helper method to build aligner section for Upper/Lower
+  Widget _buildAlignerSection(String title, List<String> aligners,
+      int selectedIndex, Function(int) onChanged) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Center(
+          child: Text(
+            title,
+            style: GoogleFonts.poppins(
+              fontSize: screenHeight * 0.015,
+              color: AppColors.secondary,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        kHeight(0.02),
+        SizedBox(
+          height: screenHeight * 0.12,
+          child: ListWheelScrollView.useDelegate(
+            itemExtent: screenHeight * 0.06,
+            diameterRatio: 1.5,
+            onSelectedItemChanged: onChanged,
+            childDelegate: ListWheelChildBuilderDelegate(
+              builder: (context, index) {
+                bool isSelected = index == selectedIndex;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: isSelected
+                          ? AppColors.secondary
+                          : AppColors.lightGray,
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Text(
+                          aligners[index],
+                          style: GoogleFonts.poppins(
+                            fontSize: screenHeight * 0.015,
+                            fontWeight: FontWeight.w500,
+                            color:
+                                isSelected ? Colors.white : AppColors.contents,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+              childCount: aligners.length,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
-  // Method to start or resume progress for not wearing
-  void startNotWearingProgress() {
-    isWearing.value = false;
-    if (_notWearingProgressTimer?.isActive ?? false) return;
-
-    // Start a periodic timer for not wearing progress
-    _notWearingProgressTimer =
-        Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (!isWearing.value) {
-        // Track not wearing progress
-        if (notWearingProgressValue < 1.0) {
-          notWearingProgressValue += increment;
-          notWearingProgress.value = notWearingProgressValue;
-        }
-      }
-    });
-  }
-
-// method for show set reminder for wearing
+  // method for show set reminder for wearing
   void showReminderDialogIfWearing() async {
     if (!isWearing.value) {
       await Future.delayed(const Duration(seconds: 1));
@@ -137,7 +257,7 @@ class HomeScreenController extends GetxController {
                                 // Handle Hour selected value
                               },
                             ),
-                            kWidth3,
+                            kWidth(0.03),
                             _buildPicker(
                               label: 'Minute',
                               values: List.generate(60,
@@ -150,7 +270,7 @@ class HomeScreenController extends GetxController {
                           ],
                         ),
                       ),
-                      kHeight1,
+                      kHeight(0.01),
                       Container(
                         padding:
                             EdgeInsets.symmetric(vertical: screenHeight * 0.02),
@@ -166,7 +286,7 @@ class HomeScreenController extends GetxController {
                           ],
                         ),
                       ),
-                      kHeight1,
+                      kHeight(0.01),
                       // Time Interval Buttons
                       Padding(
                         padding:
@@ -181,7 +301,7 @@ class HomeScreenController extends GetxController {
                           ],
                         ),
                       ),
-                      kHeight1,
+                      kHeight(0.01),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -190,7 +310,7 @@ class HomeScreenController extends GetxController {
                               AppColors.secondary,
                               AppColors.primary,
                               AppColors.secondary, () {
-                            debugPrint('Confirm clcked');
+                            debugPrint('Confirm clicked');
                           }),
                           _buildConfirmCancelButton('Cancel', AppColors.primary,
                               AppColors.secondary, AppColors.lightGray, () {
@@ -230,7 +350,7 @@ class HomeScreenController extends GetxController {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            kHeight1,
+            kHeight(0.01),
             Container(
               width: screenWidth * 0.2,
               height: screenHeight * 0.1,
@@ -323,101 +443,6 @@ class HomeScreenController extends GetxController {
           ),
         ),
       ),
-    );
-  }
-
-  // Method to pause the current progress
-  void pauseProgress() {
-    if (_wearingProgressTimer?.isActive ?? false) {
-      _wearingProgressTimer?.cancel(); // Stop the wearing timer
-    }
-
-    if (_notWearingProgressTimer?.isActive ?? false) {
-      _notWearingProgressTimer?.cancel(); // Stop the not wearing timer
-    }
-  }
-
-  // Method to reset progress (both wearing and not wearing)
-  void resetProgress() {
-    // Reset both timers and progress values
-    wearingProgressValue = 0.0;
-    notWearingProgressValue = 0.0;
-    wearingProgress.value = 0.0;
-    notWearingProgress.value = 0.0;
-    isWearing.value = true; // Start with wearing again
-
-    // Restart the wearing progress
-    startWearingProgress();
-  }
-
-  // Method to manually start progress (if needed)
-  void manualStartProgress() {
-    // Start wearing progress manually when the user clicks to start the process
-    startWearingProgress();
-  }
-
-// Navigate to select aligner screen
-  void navigateToSelectAligner() {
-    Get.toNamed(AppRoutes.selectAligner);
-  }
-
-  // Helper method to build aligner section for Upper/Lower
-  Widget _buildAlignerSection(String title, List<String> aligners,
-      int selectedIndex, Function(int) onChanged) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Center(
-          child: Text(
-            title,
-            style: GoogleFonts.poppins(
-              fontSize: screenHeight * 0.015,
-              color: AppColors.secondary,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-        kHeight2,
-        SizedBox(
-          height: screenHeight * 0.12,
-          child: ListWheelScrollView.useDelegate(
-            itemExtent: screenHeight * 0.06,
-            diameterRatio: 1.5,
-            onSelectedItemChanged: onChanged,
-            childDelegate: ListWheelChildBuilderDelegate(
-              builder: (context, index) {
-                bool isSelected = index == selectedIndex;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: isSelected
-                          ? AppColors.secondary
-                          : AppColors.lightGray,
-                    ),
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Text(
-                          aligners[index],
-                          style: GoogleFonts.poppins(
-                            fontSize: screenHeight * 0.015,
-                            fontWeight: FontWeight.w500,
-                            color:
-                                isSelected ? Colors.white : AppColors.contents,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-              childCount: aligners.length,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

@@ -103,6 +103,11 @@ class LoginController extends GetxController {
     prefs.setString('password', password);
   }
 
+  // Navigate to forgot password
+  void navigateToForgotPassword() {
+    Get.toNamed(AppRoutes.forgotPassword);
+  }
+
   //Navigation to home
   void navigationToHome() {
     Get.offNamed(AppRoutes.home);

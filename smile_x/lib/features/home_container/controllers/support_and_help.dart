@@ -20,7 +20,7 @@ class SupportAndHelp extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const CommonHeader(title: 'Support & Help'),
-                kHeight2,
+                kHeight(0.02),
                 Text(
                   'Need assistance?',
                   style: GoogleFonts.poppins(
@@ -30,7 +30,7 @@ class SupportAndHelp extends StatelessWidget {
                   ),
                   textAlign: TextAlign.start,
                 ),
-                kHeight1,
+                kHeight(0.01),
                 Text(
                   'We are here to assist you with any dental-related concerns. '
                   'Whether you need help booking an appointment, understanding treatment options, or managing your care, '
@@ -42,7 +42,7 @@ class SupportAndHelp extends StatelessWidget {
                   ),
                   textAlign: TextAlign.justify,
                 ),
-                kHeight3,
+                kHeight(0.03),
                 Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -61,7 +61,7 @@ class SupportAndHelp extends StatelessWidget {
                           ),
                         ),
                       ),
-                      kWidth5,
+                      kWidth(0.05),
                       GestureDetector(
                         onTap: () {
                           debugPrint('tap icon');

@@ -16,4 +16,27 @@ class CommonMethods {
     debugPrint('Fetched patientId: $patientId');
     return patientId;
   }
+
+  // Future<Map<String, String?>> getWearingStatus() async {
+  //   try {
+  //     SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  //     String? totalWearingHours = prefs.getString('totalWearingHours');
+  //     String? notWearingHours = prefs.getString('notWearingHours');
+
+  //     debugPrint('Total Wearing Hours: $totalWearingHours');
+  //     debugPrint('Not Wearing Hours: $notWearingHours');
+
+  //     return {
+  //       'totalWearingHours': totalWearingHours,
+  //       'notWearingHours': notWearingHours,
+  //     };
+  //   } catch (e) {
+  //     debugPrint('Error retrieving wearing status: $e');
+  //     return {
+  //       'totalWearingHours': null,
+  //       'notWearingHours': null,
+  //     };
+  //   }
+  // }
 }

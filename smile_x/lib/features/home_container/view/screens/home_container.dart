@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,9 +24,9 @@ class HomeContainer extends StatelessWidget {
         () {
           switch (_navController.selectedIndex.value) {
             case 0:
-              return const HomeScreen();
+              return HomeScreen();
             case 1:
-              return const CalenderScreen();
+              return CalenderScreen();
             case 2:
               return StatusScreen();
             default:
@@ -91,13 +92,23 @@ class HomeContainer extends StatelessWidget {
               child: FloatingActionButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50)),
-                onPressed: _navController.requestCameraPermission,
+                onPressed: () {
+                  _navController.isImageUploadLoading.value == false
+                      ? _navController.requestCameraPermission()
+                      : null;
+                },
                 backgroundColor: AppColors.primary,
-                child: Icon(
-                  Icons.add_a_photo_rounded,
-                  size: screenWidth6,
-                  color: AppColors.secondary,
-                ),
+                child: _navController.isImageUploadLoading.value == false
+                    ? Icon(
+                        Icons.add_a_photo_rounded,
+                        size: screenWidth6,
+                        color: AppColors.secondary,
+                      )
+                    : const Center(
+                        child: CupertinoActivityIndicator(
+                          color: AppColors.secondary,
+                        ),
+                      ),
               ),
             ),
           ],

@@ -1,17 +1,20 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smile_x/core/constants/colors.dart';
 import 'package:smile_x/core/constants/const.dart';
 import 'package:smile_x/core/widgets/common_header.dart';
+import 'package:smile_x/features/home_container/controllers/treatment_controller.dart';
+import 'package:smile_x/services/api_client.dart';
+import 'package:smile_x/services/api_manager.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-// Controller to manage TableCalendar state
 class TableCalendarController extends GetxController {
   var selectedDay = DateTime.now().obs;
   var focusedDay = DateTime.now().obs;
 
-  // When a day is selected, update both the focused and selected day
   void onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     this.selectedDay.value = selectedDay;
     this.focusedDay.value = focusedDay;
@@ -22,19 +25,29 @@ class AdjustTreatmentUpdate extends StatelessWidget {
   AdjustTreatmentUpdate({super.key});
 
   final TableCalendarController controller = Get.put(TableCalendarController());
+  final TreatmentController treatmentController = Get.put(
+      TreatmentController(apiManager: ApiManager(apiClient: ApiClient(Dio()))));
 
   @override
   Widget build(BuildContext context) {
+    final arguments = Get.arguments;
+    final alignerId = arguments['alignerId'] as int;
+    final alignerType = arguments['alignerType'] as String;
+
+    // Log the alignerId and alignerType
+    debugPrint('Aligner ID: $alignerId');
+    debugPrint('Aligner Type: $alignerType');
+
     return Scaffold(
       backgroundColor: AppColors.primary,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: screenWidth2, vertical: screenHeight2),
+              horizontal: screenWidth5, vertical: screenHeight4),
           child: Column(
             children: [
-              const CommonHeader(title: 'U1'),
-              kHeight2,
+              const CommonHeader(title: 'Update Schedule'),
+              kHeight(0.02),
               Container(
                 padding: EdgeInsets.symmetric(
                     horizontal: screenWidth2, vertical: screenHeight1),
@@ -110,28 +123,42 @@ class AdjustTreatmentUpdate extends StatelessWidget {
                   ),
                 ),
               ),
-              kHeight2,
-              // Use the updated selectedDay for displaying in the date picker
+              kHeight(0.02),
               Obx(() => _buildDatePicker(
                   'Start Date:', formatDate(controller.selectedDay.value))),
-              Spacer(),
+              const Spacer(),
               Column(
                 children: [
-                  _buildBottomButtons(
-                    label: 'Save',
-                    buttonBgColor: AppColors.secondary,
-                    textColor: AppColors.primary,
-                    onPressed: () {
-                      debugPrint('Submit button pressed');
-                    },
-                  ),
-                  kHeight1,
+                  Obx(() {
+                    return _buildBottomButtons(
+                      label: treatmentController.isLoading.value ? '' : 'Save',
+                      buttonBgColor: AppColors.secondary,
+                      textColor: AppColors.primary,
+                      onPressed: treatmentController.isLoading.value
+                          ? () {
+                              return;
+                            } // Disable button when loading
+                          : () {
+                              treatmentController.updateSchedule(
+                                alignerId,
+                                alignerType,
+                                controller.selectedDay.value,
+                              );
+                            },
+                      child: treatmentController.isLoading.value
+                          ? const CupertinoActivityIndicator(
+                              color: AppColors.primary,
+                            )
+                          : null,
+                    );
+                  }),
+                  kHeight(0.01),
                   _buildBottomButtons(
                     label: 'Cancel',
                     buttonBgColor: AppColors.primary,
                     textColor: AppColors.secondary,
                     onPressed: () {
-                      debugPrint('Cancel button pressed');
+                      Get.back();
                     },
                   ),
                 ],
@@ -185,11 +212,13 @@ Widget _buildDatePicker(String label, String selectedDate) {
   );
 }
 
-Widget _buildBottomButtons(
-    {required String label,
-    required Color buttonBgColor,
-    required Color textColor,
-    required VoidCallback onPressed}) {
+Widget _buildBottomButtons({
+  required String label,
+  required Color buttonBgColor,
+  required Color textColor,
+  required VoidCallback onPressed,
+  Widget? child,
+}) {
   return Container(
     width: double.infinity,
     padding: EdgeInsets.symmetric(
@@ -207,23 +236,22 @@ Widget _buildBottomButtons(
         ]),
     child: TextButton(
       onPressed: onPressed,
-      child: Text(
-        label,
-        style: GoogleFonts.poppins(
-          fontSize: contentSize,
-          color: textColor,
-        ),
-      ),
+      child: child ??
+          Text(
+            label,
+            style: GoogleFonts.poppins(
+              fontSize: contentSize,
+              color: textColor,
+            ),
+          ),
     ),
   );
 }
 
-// Function to format the date in 'dd-MMMM-yyyy' format
 String formatDate(DateTime date) {
   return "${date.day.toString().padLeft(2, '0')}-${getMonthName(date.month)}-${date.year}";
 }
 
-// Function to get the month name
 String getMonthName(int month) {
   const monthNames = [
     'January',

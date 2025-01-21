@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,11 +6,19 @@ import 'package:smile_x/core/constants/colors.dart';
 import 'package:smile_x/core/constants/const.dart';
 import 'package:smile_x/features/home_container/controllers/homescreen_controller.dart';
 import 'package:smile_x/features/home_container/controllers/profile_screen_controller.dart';
+import 'package:smile_x/features/home_container/controllers/select_aligner_controller.dart';
 import 'package:smile_x/features/home_container/view/widgets/custom_progress_indicator.dart';
 import 'package:smile_x/routes/app_routes.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final HomeScreenController homeScreenController =
+      Get.put(HomeScreenController());
+  final SelectAlignerController selectAlignerController =
+      Get.put(SelectAlignerController());
+
+  final ProfileScreenController profileController =
+      Get.put(ProfileScreenController());
+  HomeScreen({super.key});
 
   Future<bool> _onWillPop() async {
     return await Get.dialog(
@@ -55,12 +64,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HomeScreenController homeScreenController =
-        Get.put(HomeScreenController());
-
-    final ProfileScreenController profileController =
-        Get.put(ProfileScreenController());
-
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -110,7 +113,7 @@ class HomeScreen extends StatelessWidget {
                               color: AppColors.contents,
                             ),
                           ),
-                          kWidth2,
+                          kWidth(0.02),
                           Container(
                             decoration: const BoxDecoration(
                               shape: BoxShape.circle,
@@ -136,50 +139,60 @@ class HomeScreen extends StatelessWidget {
                       // Second Section
                     ],
                   ),
-                  kHeight4,
+                  kHeight(0.04),
                   Stack(
                     alignment: Alignment.center,
                     children: [
                       Obx(() {
                         return CircularProgressWithPointer(
-                          radius: 0.7,
-                          progress: homeScreenController.wearingProgress.value,
+                          radius: 0.6,
+                          progress:
+                              selectAlignerController.wearingProgress.value,
                           progressColor: AppColors.yellowlight,
                           iconData: Icons.thumb_up_rounded,
                           iconSize: smallIconSize,
-                          strokeWidth: screenHeight * 0.018,
-                          pointerAvatarRadius: screenHeight * 0.016,
+                          strokeWidth: screenHeight * 0.016,
+                          pointerAvatarRadius: screenHeight * 0.014,
                           nonProgressColor: AppColors.lightGray,
                           pointerAvatarColor: AppColors.yellowlight,
                           pointerIconColor: AppColors.primary,
                         );
                       }),
-                      Obx(() {
-                        return CircularProgressWithPointer(
-                          radius: 0.55,
-                          progress:
-                              homeScreenController.notWearingProgress.value,
-                          progressColor: AppColors.secondary,
-                          iconData: Icons.fastfood_rounded,
-                          iconSize: smallIconSize,
-                          strokeWidth: screenHeight * 0.016,
-                          pointerAvatarRadius: screenHeight * 0.014,
-                          nonProgressColor: AppColors.lightGray,
-                          pointerAvatarColor: AppColors.secondary,
-                          pointerIconColor: AppColors.primary,
-                        );
-                      }),
+                      // Obx(() {
+                      //   return CircularProgressWithPointer(
+                      //     radius: 0.55,
+                      //     progress:
+                      //         selectAlignerController.notWearingProgress.value,
+                      //     progressColor: AppColors.secondary,
+                      //     iconData: Icons.fastfood_rounded,
+                      //     iconSize: smallIconSize,
+                      //     strokeWidth: screenHeight * 0.016,
+                      //     pointerAvatarRadius: screenHeight * 0.014,
+                      //     nonProgressColor: AppColors.lightGray,
+                      //     pointerAvatarColor: AppColors.secondary,
+                      //     pointerIconColor: AppColors.primary,
+                      //   );
+                      // }),
                       Obx(
                         () {
+                          if (selectAlignerController.isProcessing.value) {
+                            return const Center(
+                              child: CupertinoActivityIndicator(
+                                color: AppColors.secondary,
+                              ),
+                            );
+                          }
                           return Container(
-                            width: screenWidth * 0.4,
-                            height: screenWidth * 0.4,
+                            width: screenWidth * 0.47,
+                            height: screenWidth * 0.47,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: AppColors.primary,
                               boxShadow: [
                                 BoxShadow(
-                                  color: homeScreenController.isWearing.value
+                                  color: selectAlignerController
+                                              .wearingStatus.value ==
+                                          1
                                       ? AppColors.lightGray.withOpacity(0.5)
                                       : AppColors.danger.withOpacity(0.2),
                                   spreadRadius: 8,
@@ -187,7 +200,9 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               ],
                               border: Border.all(
-                                color: homeScreenController.isWearing.value
+                                color: selectAlignerController
+                                            .wearingStatus.value ==
+                                        1
                                     ? AppColors.lightGray.withOpacity(0.5)
                                     : AppColors.danger.withOpacity(0.1),
                                 width: 2.0,
@@ -195,12 +210,22 @@ class HomeScreen extends StatelessWidget {
                             ),
                             child: GestureDetector(
                               onTap: () async {
-                                // homeScreenController.toggleWearing();
-                                homeScreenController.isWearing.value
-                                    ? homeScreenController
-                                        .startNotWearingProgress()
-                                    : homeScreenController
-                                        .startWearingProgress();
+                                if (selectAlignerController
+                                    .isProcessing.value) {
+                                  // If a process is already running, do nothing or show a loading indicator
+                                  return; // Skip if already processing
+                                }
+
+                                // Proceed with the action if not processing
+                                if (selectAlignerController
+                                        .wearingStatus.value ==
+                                    1) {
+                                  await selectAlignerController
+                                      .updateTracking();
+                                } else {
+                                  await selectAlignerController
+                                      .saveAlignerTracking("home");
+                                }
                               },
                               child: CircleAvatar(
                                 radius: screenWidth * 0.2,
@@ -209,12 +234,14 @@ class HomeScreen extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      homeScreenController.isWearing.value
+                                      selectAlignerController
+                                                  .wearingStatus.value ==
+                                              1
                                           ? 'Wearing'
                                           : 'Not Wearing',
                                       style: GoogleFonts.poppins(
                                         color: AppColors.blueShade,
-                                        fontSize: contentSize,
+                                        fontSize: subTitleSize,
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
@@ -229,16 +256,17 @@ class HomeScreen extends StatelessWidget {
                                     ),
                                     SizedBox(height: screenHeight * 0.001),
                                     Text(
-                                      '16:21',
+                                      selectAlignerController
+                                          .formattedTotalWearingHours.value,
                                       style: GoogleFonts.poppins(
-                                        fontSize: mainTitleSize,
+                                        fontSize: wearTimer,
                                         color: AppColors.secondary,
-                                        fontWeight: FontWeight.w600,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                     SizedBox(height: screenHeight * 0.001),
                                     Text(
-                                      'Out 1:45',
+                                      'Out ${selectAlignerController.formattedNotWearingHours.value} Hrs',
                                       style: GoogleFonts.poppins(
                                         color: AppColors.greyShade,
                                         fontSize: contentSize,
@@ -254,23 +282,31 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  kHeight4,
+                  kHeight(0.05),
                   Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _buildCardItem(Icons.sync, 'U1 #1 \n L1 #1', () {
-                          homeScreenController.navigateToSelectAligner();
+                        Obx(() {
+                          return _buildCardItem(Icons.sync,
+                              "${selectAlignerController.currentUpperAligner}\n${selectAlignerController.currentLowerAligner}",
+                              () {
+                            homeScreenController.navigateToSelectAligner();
+                          });
                         }),
                         SizedBox(width: screenWidth2),
                         _buildCardItem(Icons.calendar_month,
-                            '23/365: Keep Your Smile Bright!', () {
+                            '23 days: Keep Your Smile Bright!', () {
                           debugPrint("Remaining days.....");
+                          // int countdown = profileController
+                          //         .patient.value?.scheduleCountDown ??
+                          //     0;
+                          // debugPrint("Remaining days: $countdown");
                         }),
                       ],
                     ),
                   ),
-                  kHeight4,
+                  kHeight(0.05),
                   Card(
                     color: AppColors.lightGray,
                     shape: RoundedRectangleBorder(
@@ -359,17 +395,17 @@ Widget _buildCardItem(IconData icon, String title, VoidCallback onTap) {
         width: screenWidth * 0.4,
         height: screenHeight * 0.15,
         padding: EdgeInsets.symmetric(
-            horizontal: screenWidth2, vertical: screenHeight3),
+          horizontal: screenWidth1,
+          vertical: screenHeight3,
+        ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(
               icon,
               size: smallIconSize,
               color: AppColors.primary,
             ),
-            kHeight1,
+            kHeight(0.01),
             Text(
               title,
               style: GoogleFonts.poppins(

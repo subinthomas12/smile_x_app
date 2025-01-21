@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smile_x/core/constants/colors.dart';
 import 'package:smile_x/core/constants/const.dart';
@@ -112,7 +111,7 @@ class NotificationScreen extends StatelessWidget {
             child: Column(
               children: [
                 const CommonHeader(title: 'Notifications'),
-                kHeight1,
+                kHeight(0.01),
                 if (isEmpty)
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -277,7 +276,7 @@ Widget _buildEmptyState() {
             color: AppColors.secondary,
             fontWeight: FontWeight.w500),
       ),
-      kHeight1,
+      kHeight(0.01),
       Text(
         "Come back later for Reminders, Teeth \n tips, Timing and Monitoring",
         style: GoogleFonts.poppins(

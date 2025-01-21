@@ -2,8 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:smile_x/core/constants/colors.dart';
+import 'package:smile_x/core/constants/const.dart';
 import 'package:smile_x/features/login/view_models/patient_modal.dart';
 import 'package:smile_x/routes/app_routes.dart';
 
@@ -117,9 +120,22 @@ class ProfileScreenController extends GetxController {
     Get.toNamed(AppRoutes.supportAndHelp);
   }
 
+  void navigateToUploadsHistory() {
+    Get.toNamed(AppRoutes.uploadsHistory);
+  }
+
   // Method for navigate to Treatment update screen
-  void navigateToTreatmentUpdate() {
-    Get.toNamed(AppRoutes.adjustTreatmentUpdate);
+  void navigateToTreatmentUpdate({
+    required int alignerId,
+    required String alignerType,
+  }) {
+    Get.toNamed(
+      AppRoutes.adjustTreatmentUpdate,
+      arguments: {
+        'alignerId': alignerId,
+        'alignerType': alignerType,
+      },
+    );
   }
 
   // Method to toggle password visibility
@@ -127,8 +143,53 @@ class ProfileScreenController extends GetxController {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
-  // Method for Logout
-  void userLogout() {
-    Get.offNamed(AppRoutes.initial);
+// Logout method with shared preferences clearing
+  void userLogout() async {
+    Get.dialog(
+      AlertDialog(
+        title: Text(
+          'Logout',
+          style: GoogleFonts.poppins(
+            fontSize: subTitleSize,
+            color: AppColors.secondary,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        content: Text(
+          'Are you sure you want to logout?',
+          style: GoogleFonts.poppins(
+            fontSize: contentSize,
+            color: AppColors.contents,
+          ),
+          textAlign: TextAlign.justify,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              // Close the dialog
+              Get.back();
+            },
+            child: Text(
+              'No',
+              style: GoogleFonts.poppins(
+                fontSize: smallFontSize,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              await prefs.remove('username');
+              await prefs.remove('password');
+              Get.offNamed(AppRoutes.login);
+            },
+            child: Text(
+              'Yes',
+              style: GoogleFonts.poppins(fontSize: smallFontSize),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

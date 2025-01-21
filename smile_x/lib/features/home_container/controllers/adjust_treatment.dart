@@ -8,12 +8,11 @@ import 'package:smile_x/core/constants/const.dart';
 import 'package:smile_x/core/widgets/common_header.dart';
 import 'package:smile_x/features/home_container/controllers/profile_screen_controller.dart';
 import 'package:smile_x/features/home_container/controllers/treatment_controller.dart';
-import 'package:intl/intl.dart';
 import 'package:smile_x/services/api_client.dart';
 import 'package:smile_x/services/api_manager.dart';
 
 class AdjustTreatment extends StatefulWidget {
-  AdjustTreatment({super.key});
+  const AdjustTreatment({super.key});
 
   @override
   _AdjustTreatmentState createState() => _AdjustTreatmentState();
@@ -59,63 +58,63 @@ class _AdjustTreatmentState extends State<AdjustTreatment>
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: screenWidth2, vertical: screenHeight2),
+              horizontal: screenWidth5, vertical: screenHeight4),
           child: Column(
             children: [
               const CommonHeader(title: 'Treatment Schedule'),
-              kHeight2,
-              Align(
-                alignment: Alignment.topLeft,
-                child: TextButton(
-                  onPressed: () {
-                    profileController.navigateToAdjustTreatmentStartDate();
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: AppColors.secondary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Obx(() {
-                    String formattedDate = '';
-                    if (treatmentController.initialStartDate.value.isNotEmpty) {
-                      DateTime startDate = DateTime.parse(
-                          treatmentController.initialStartDate.value);
-                      formattedDate =
-                          DateFormat('dd-MM-yyyy').format(startDate);
-                    }
-                    return RichText(
-                      text: TextSpan(
-                        children: [
-                          WidgetSpan(
-                            child: Icon(
-                              Icons.edit,
-                              color: AppColors.primary,
-                              size: smallIconSize,
-                            ),
-                            alignment: PlaceholderAlignment.middle,
-                          ),
-                          TextSpan(
-                            text: ' Start: ',
-                            style: GoogleFonts.poppins(
-                              color: AppColors.primary,
-                              fontSize: smallFontSize,
-                            ),
-                          ),
-                          TextSpan(
-                            text: formattedDate,
-                            style: GoogleFonts.poppins(
-                              color: AppColors.primary,
-                              fontSize: smallFontSize,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
-                ),
-              ),
-              kHeight1,
+              kHeight(0.02),
+              // Align(
+              //   alignment: Alignment.topLeft,
+              //   child: TextButton(
+              //     onPressed: () {
+              //       profileController.navigateToAdjustTreatmentStartDate();
+              //     },
+              //     style: TextButton.styleFrom(
+              //       backgroundColor: AppColors.secondary,
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(12),
+              //       ),
+              //     ),
+              //     child: Obx(() {
+              //       String formattedDate = '';
+              //       if (treatmentController.initialStartDate.value.isNotEmpty) {
+              //         DateTime startDate = DateTime.parse(
+              //             treatmentController.initialStartDate.value);
+              //         formattedDate =
+              //             DateFormat('dd-MM-yyyy').format(startDate);
+              //       }
+              //       return RichText(
+              //         text: TextSpan(
+              //           children: [
+              //             WidgetSpan(
+              //               child: Icon(
+              //                 Icons.edit,
+              //                 color: AppColors.primary,
+              //                 size: smallIconSize,
+              //               ),
+              //               alignment: PlaceholderAlignment.middle,
+              //             ),
+              //             TextSpan(
+              //               text: ' Start: ',
+              //               style: GoogleFonts.poppins(
+              //                 color: AppColors.primary,
+              //                 fontSize: smallFontSize,
+              //               ),
+              //             ),
+              //             TextSpan(
+              //               text: formattedDate,
+              //               style: GoogleFonts.poppins(
+              //                 color: AppColors.primary,
+              //                 fontSize: smallFontSize,
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //       );
+              //     }),
+              //   ),
+              // ),
+              kHeight(0.01),
               Container(
                 decoration: BoxDecoration(
                     color: AppColors.primary,
@@ -148,7 +147,7 @@ class _AdjustTreatmentState extends State<AdjustTreatment>
                   ),
                 ),
               ),
-              kHeight1,
+              kHeight(0.01),
               Expanded(
                 child: TabBarView(
                   controller: _tabController,
@@ -169,10 +168,9 @@ class _AdjustTreatmentState extends State<AdjustTreatment>
                             var item = treatmentController.alignersList[index];
 
                             return _buildAlignerListingCards(
-                                item['aligners'],
-                                item['alignerDays'],
-                                item['startDate'],
-                                profileController);
+                              item: item, // Pass the whole item
+                              profileController: profileController,
+                            );
                           },
                         );
                       }
@@ -193,10 +191,9 @@ class _AdjustTreatmentState extends State<AdjustTreatment>
                           itemBuilder: (context, index) {
                             var item = treatmentController.alignersList[index];
                             return _buildAlignerListingCards(
-                                item['aligners'],
-                                item['alignerDays'],
-                                item['startDate'],
-                                profileController);
+                              item: item, // Pass the whole item
+                              profileController: profileController,
+                            );
                           },
                         );
                       }
@@ -211,8 +208,10 @@ class _AdjustTreatmentState extends State<AdjustTreatment>
     );
   }
 
-  Widget _buildAlignerListingCards(String aligners, String alignerDays,
-      String startDate, ProfileScreenController profileController) {
+  Widget _buildAlignerListingCards({
+    required Map<String, dynamic> item,
+    required ProfileScreenController profileController,
+  }) {
     IconData editIcon = Icons.edit;
     String dateTitle = 'Start Date';
 
@@ -228,16 +227,16 @@ class _AdjustTreatmentState extends State<AdjustTreatment>
             Column(
               children: [
                 Text(
-                  aligners,
+                  item['aligners'],
                   style: GoogleFonts.poppins(
                     color: AppColors.primary,
                     fontSize: contentSize,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                kHeight1,
+                kHeight(0.01),
                 Text(
-                  alignerDays,
+                  item['alignerDays'],
                   style: GoogleFonts.poppins(
                     color: AppColors.primary,
                     fontSize: contentSize,
@@ -256,9 +255,9 @@ class _AdjustTreatmentState extends State<AdjustTreatment>
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                kHeight1,
+                kHeight(0.01),
                 Text(
-                  startDate,
+                  item['startDate'],
                   style: GoogleFonts.poppins(
                     color: AppColors.primary,
                     fontSize: contentSize,
@@ -268,14 +267,22 @@ class _AdjustTreatmentState extends State<AdjustTreatment>
               ],
             ),
             IconButton(
-                onPressed: () {
-                  profileController.navigateToTreatmentUpdate();
-                },
-                icon: Icon(
-                  editIcon,
-                  color: AppColors.primary,
-                  size: smallIconSize,
-                ))
+              onPressed: () {
+                if (item['alignerId'] != null && item['alignerType'] != null) {
+                  profileController.navigateToTreatmentUpdate(
+                    alignerId: item['alignerId'],
+                    alignerType: item['alignerType'],
+                  );
+                } else {
+                  debugPrint('Error: Aligner ID or Type is null');
+                }
+              },
+              icon: Icon(
+                editIcon,
+                color: AppColors.primary,
+                size: smallIconSize,
+              ),
+            ),
           ],
         ),
       ),

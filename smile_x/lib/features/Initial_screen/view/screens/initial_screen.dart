@@ -46,7 +46,7 @@ class InitialScreen extends StatelessWidget {
                         color: AppColors.secondary,
                       ),
                     ),
-                    kHeight1,
+                    kHeight(0.01),
                     Text(
                       '"Smile Brighter, Live Healthier! Your personal guide to dental care at your fingertips."',
                       style: GoogleFonts.aBeeZee(
@@ -56,7 +56,7 @@ class InitialScreen extends StatelessWidget {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    kHeight2,
+                    kHeight(0.02),
                     AnimatedSwipeButton(),
                   ],
                 ),

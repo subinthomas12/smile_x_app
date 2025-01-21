@@ -28,7 +28,7 @@ class CommonHeader extends StatelessWidget {
             ),
           ),
         ),
-        kWidth5,
+        kWidth(0.05),
         Text(
           title,
           style: GoogleFonts.poppins(

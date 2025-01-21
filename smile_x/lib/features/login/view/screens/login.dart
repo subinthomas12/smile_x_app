@@ -61,7 +61,7 @@ class LoginScreen extends StatelessWidget {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    kHeight3,
+                    kHeight(0.03),
                     TextFormField(
                       controller: usernameController,
                       decoration: InputDecoration(
@@ -88,7 +88,7 @@ class LoginScreen extends StatelessWidget {
                         return loginController.validateUsername(value);
                       },
                     ),
-                    kHeight1,
+                    kHeight(0.01),
                     Obx(
                       () => TextFormField(
                           controller: passwordController,
@@ -129,6 +129,22 @@ class LoginScreen extends StatelessWidget {
                           validator: (value) {
                             return loginController.validatePassword(value);
                           }),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          loginController.navigateToForgotPassword();
+                        },
+                        child: Text(
+                          'Forgot Password?',
+                          style: GoogleFonts.poppins(
+                            fontSize: contentSize,
+                            color: AppColors.danger,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),

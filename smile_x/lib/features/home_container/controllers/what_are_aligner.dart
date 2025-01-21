@@ -15,13 +15,13 @@ class WhatAreAligners extends StatelessWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(
-                vertical: screenHeight2, horizontal: screenWidth2),
+                vertical: screenHeight4, horizontal: screenWidth5),
             child: Column(
               children: [
                 Row(
                   children: [
                     CircleAvatar(
-                      radius: screenHeight2,
+                      radius: screenHeight3,
                       backgroundColor: AppColors.lightGray,
                       child: IconButton(
                         icon: Icon(
@@ -34,16 +34,14 @@ class WhatAreAligners extends StatelessWidget {
                         },
                       ),
                     ),
-                    const Expanded(
-                      child: Center(
-                        child: LogoImageWidget(),
-                      ),
-                    ),
+                    kWidth(0.05),
+                    // ignore: prefer_const_constructors
+                    LogoImageWidget(),
                   ],
                 ),
-                kHeight2,
+                kHeight(0.04),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'What are Aligners',
@@ -52,9 +50,8 @@ class WhatAreAligners extends StatelessWidget {
                         color: AppColors.contents,
                         fontWeight: FontWeight.w500,
                       ),
-                      textAlign: TextAlign.center,
                     ),
-                    kHeight1,
+                    kHeight(0.01),
                     Text(
                       "Invisible Teeth Aligners Are Custom Trays That Gradually Shift Teeth Into Position. They're A Comfortable, Removable Alternative To Braces, Effectively Treating Most Misalignments.",
                       style: GoogleFonts.poppins(
@@ -64,7 +61,7 @@ class WhatAreAligners extends StatelessWidget {
                       ),
                       textAlign: TextAlign.justify,
                     ),
-                    kHeight2,
+                    kHeight(0.02),
                     ListView.builder(
                         itemCount: 8,
                         shrinkWrap: true,
@@ -87,13 +84,12 @@ class WhatAreAligners extends StatelessWidget {
                                   Text(
                                     'Visit a Dentist',
                                     style: GoogleFonts.poppins(
-                                      fontSize: subTitleSize,
+                                      fontSize: contentSize,
                                       color: AppColors.secondary,
                                       fontWeight: FontWeight.w600,
                                     ),
-                                    textAlign: TextAlign.center,
                                   ),
-                                  kHeight1,
+                                  kHeight(0.01),
                                   Text(
                                     'Visit a dentist near you for a Clinical examinations. He/She will evaluate your general oral health status, malocclusion, bite etc. X-rays and other diagnostic procedures will be conducted by him/her',
                                     style: GoogleFonts.poppins(

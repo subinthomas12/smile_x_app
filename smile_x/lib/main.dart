@@ -1,9 +1,6 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smile_x/core/constants/colors.dart';
-import 'package:smile_x/features/home_container/view/screens/home_container.dart';
-import 'package:smile_x/features/home_container/view/widgets/home.dart';
 import 'package:smile_x/routes/app_pages.dart';
 
 void main() {

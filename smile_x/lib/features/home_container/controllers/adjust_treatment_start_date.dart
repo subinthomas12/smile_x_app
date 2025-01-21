@@ -34,7 +34,7 @@ class AdjustTreatmentStartDate extends StatelessWidget {
           child: Column(
             children: [
               const CommonHeader(title: 'Update Treatment Start Date'),
-              kHeight2,
+              kHeight(0.02),
               Container(
                 padding: EdgeInsets.symmetric(
                     horizontal: screenWidth2, vertical: screenHeight1),
@@ -110,11 +110,11 @@ class AdjustTreatmentStartDate extends StatelessWidget {
                   ),
                 ),
               ),
-              kHeight2,
+              kHeight(0.02),
               // Update the date in _buildDatePicker dynamically based on the controller's selectedDay
               Obx(() => _buildDatePicker(
                   'Start Date:', formatDate(controller.selectedDay.value))),
-              Spacer(),
+              const Spacer(),
               Column(
                 children: [
                   _buildBottomButtons(
@@ -125,7 +125,7 @@ class AdjustTreatmentStartDate extends StatelessWidget {
                       debugPrint('Save button pressed');
                     },
                   ),
-                  kHeight1,
+                  kHeight(0.01),
                   _buildBottomButtons(
                     label: 'Cancel',
                     buttonBgColor: AppColors.primary,

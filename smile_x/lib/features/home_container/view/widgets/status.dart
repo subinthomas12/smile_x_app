@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smile_x/core/constants/colors.dart';
 import 'package:smile_x/core/constants/const.dart';
+import 'package:smile_x/features/home_container/controllers/home_controller.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../../core/widgets/logo_image_widget.dart';
@@ -12,85 +13,94 @@ class StatusScreen extends StatelessWidget {
   StatusScreen({super.key});
   final TabControllerController _tabController =
       Get.put(TabControllerController());
+  final NavigationController _navController = Get.put(NavigationController());
 
   @override
   Widget build(BuildContext context) {
     final List<String> items =
         List.generate(10, (index) => 'Item #${index + 1}');
 
-    return Scaffold(
-      backgroundColor: AppColors.primary,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: screenWidth5, vertical: screenHeight3),
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(bottom: screenHeight2),
-                child: Row(
-                  children: [
-                    const LogoImageWidget(),
-                    const Spacer(),
-                    IconButton(
-                      icon: Icon(
-                        Icons.share,
-                        color: AppColors.contents,
-                        size: iconSize,
+    return WillPopScope(
+      onWillPop: () async {
+        _navController.selectedIndex.value = 0;
+        // This will navigate to the "/home" route when the back button is pressed
+        Get.offNamed("/home");
+        return false; // Returning false so the default back navigation is prevented
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.primary,
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: screenWidth5, vertical: screenHeight3),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(bottom: screenHeight1),
+                  child: Row(
+                    children: [
+                      const LogoImageWidget(),
+                      const Spacer(),
+                      IconButton(
+                        icon: Icon(
+                          Icons.share,
+                          color: AppColors.contents,
+                          size: iconSize,
+                        ),
+                        onPressed: () {
+                          debugPrint("share.....");
+                        },
                       ),
-                      onPressed: () {
-                        debugPrint("share.....");
-                      },
+                    ],
+                  ),
+                ),
+                kHeight(0.01),
+                _buildCustomButton(),
+                Obx(() {
+                  return Text(_tabController.data.string);
+                }),
+                GraphWidget(
+                  title: 'Status Monitor',
+                  onDropdownChanged: onDropdownChanged,
+                ),
+                kHeight(0.01),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Total Wear Time',
+                      style: GoogleFonts.poppins(
+                        color: AppColors.contents,
+                        fontSize: subTitleSize,
+                      ),
+                    ),
+                    Text(
+                      'Aligner #1',
+                      style: GoogleFonts.poppins(
+                        color: AppColors.contents,
+                        fontSize: subTitleSize,
+                      ),
                     ),
                   ],
                 ),
-              ),
-              kHeight1,
-              _buildCustomButton(),
-              Obx(() {
-                return Text(_tabController.data.string);
-              }),
-              GraphWidget(
-                title: 'Status Monitor',
-                dropdownItems: const ['Last 7 days', 'Last day'],
-                onDropdownChanged: onDropdownChanged,
-              ),
-              kHeight1,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Total Wear Time',
-                    style: GoogleFonts.poppins(
-                      color: AppColors.contents,
-                      fontSize: subTitleSize,
+                kHeight(0.01),
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4,
+                      crossAxisSpacing: 8.0,
+                      mainAxisSpacing: 8.0,
+                      childAspectRatio: 1.0,
                     ),
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      return buildContainer(index + 1);
+                    },
                   ),
-                  Text(
-                    'Aligner #1',
-                    style: GoogleFonts.poppins(
-                      color: AppColors.contents,
-                      fontSize: subTitleSize,
-                    ),
-                  ),
-                ],
-              ),
-              kHeight1,
-              Expanded(
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    crossAxisSpacing: 8.0,
-                    mainAxisSpacing: 8.0,
-                    childAspectRatio: 1.0,
-                  ),
-                  itemCount: items.length,
-                  itemBuilder: (context, index) {
-                    return buildContainer(index + 1);
-                  },
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -139,7 +149,7 @@ class StatusScreen extends StatelessWidget {
 
   SizedBox _buildCustomButton() {
     return SizedBox(
-      height: screenHeight5,
+      height: screenHeight4,
       child: ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
@@ -149,14 +159,16 @@ class StatusScreen extends StatelessWidget {
           return InkWell(
             onTap: () {
               debugPrint("Tab $index");
-              _tabController.textChange(index); // Call this method here
+              _tabController.textChange(index);
             },
             child: Obx(
               () {
                 bool isSelected =
                     _tabController.selectedTabIndex.toInt() == index;
                 return Padding(
-                  padding: EdgeInsets.all(screenWidth1),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.005,
+                  ),
                   child: Container(
                     decoration: BoxDecoration(
                       color: _tabController.selectedTabIndex.toInt() == index
@@ -196,13 +208,13 @@ class StatusScreen extends StatelessWidget {
 
 class GraphWidget extends StatelessWidget {
   final String title;
-  final List<String> dropdownItems;
+  // final List<String> dropdownItems;
   final ValueChanged<String?> onDropdownChanged;
 
   GraphWidget({
     super.key,
     required this.title,
-    required this.dropdownItems,
+    // required this.dropdownItems,
     required this.onDropdownChanged,
   });
 
@@ -253,10 +265,17 @@ class GraphWidget extends StatelessWidget {
                             Border.all(color: AppColors.lightGray, width: 1),
                       ),
                       child: DropdownButton<String>(
-                        value:
-                            dropdownItems.isNotEmpty ? dropdownItems[0] : null,
+                        value: _tabController
+                                .getDropdownItems(
+                                    _tabController.selectedTabIndex.value)
+                                .isNotEmpty
+                            ? _tabController.getDropdownItems(
+                                _tabController.selectedTabIndex.value)[0]
+                            : null,
                         onChanged: onDropdownChanged,
-                        items: dropdownItems
+                        items: _tabController
+                            .getDropdownItems(
+                                _tabController.selectedTabIndex.value)
                             .map((item) => DropdownMenuItem<String>(
                                   value: item,
                                   child: Text(item),
@@ -267,7 +286,7 @@ class GraphWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                kHeight1,
+                kHeight(0.01),
                 Center(
                   child: Text(
                     "From Sun to Sat",
@@ -278,19 +297,24 @@ class GraphWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                kHeight2,
+                kHeight(0.02),
                 SizedBox(
                   height: screenHeight * 0.25,
                   width: double.infinity,
                   child: SfCartesianChart(
-                    primaryXAxis: CategoryAxis(),
+                    primaryXAxis: CategoryAxis(
+                      majorGridLines: MajorGridLines(width: 1),
+                      majorTickLines: MajorTickLines(width: 0),
+                      labelRotation: 45,
+                      labelIntersectAction: AxisLabelIntersectAction.rotate45,
+                    ),
                     primaryYAxis: NumericAxis(
                       labelFormat: '{value} hrs',
                       minimum: 0,
                       maximum: 24,
                       interval: 6,
                       majorGridLines: const MajorGridLines(width: 1),
-                      minorGridLines: const MinorGridLines(width: 0),
+                      minorGridLines: const MinorGridLines(width: 1),
                     ),
                     series: <ChartSeries>[
                       ColumnSeries<ChartData, String>(

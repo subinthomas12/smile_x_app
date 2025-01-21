@@ -13,7 +13,7 @@ class WorkInProgress extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: AppColors.contents),
+          icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.contents),
           onPressed: () {
             Get.back();
           },

@@ -9,19 +9,18 @@ class ApiClient {
     _dio.options.receiveTimeout = const Duration(seconds: 20);
     _dio.options.responseType = ResponseType.json;
 
-    // Modify the validateStatus function to allow 401 status code to not throw an exception
     _dio.options.validateStatus = (status) {
-      return status != null &&
-          status < 500; // Allow status codes below 500, including 401
+      return status != null && status < 500;
     };
   }
 
-  Future<Response?> request(String url, FormData data, {String? method}) async {
+  Future<Response?> request(String url, FormData data,
+      {String? method, Map<String, String>? headers}) async {
     try {
       final response = await _dio.request(
         url,
         data: data,
-        options: Options(method: method ?? 'post'),
+        options: Options(method: method ?? 'post', headers: headers ?? {}),
       );
       return response;
     } on DioException catch (e) {
@@ -38,8 +37,7 @@ class ApiClient {
         _showNetworkErrorPage();
       }
 
-      return e
-          .response; // Return the response even on error (instead of throwing)
+      return e.response;
     } catch (e) {
       debugPrint('Unexpected error: $e');
       throw Exception('Failed to make POST request: $e');
@@ -49,6 +47,5 @@ class ApiClient {
   // Method to show a network error page or dialog
   void _showNetworkErrorPage() {
     debugPrint('Showing network error page...');
-    // Trigger the error page or dialog
   }
 }

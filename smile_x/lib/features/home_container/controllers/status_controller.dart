@@ -1,38 +1,37 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 import '../view/widgets/status.dart';
 
 class TabControllerController extends GetxController {
   var selectedTabIndex = 0.obs;
   var data = ''.obs;
 
-  List<ChartData> getChartData(int index) {
+  // Dropdown items for each tab type
+  List<String> getDropdownItems(int index) {
     switch (index) {
       case 0:
-        // data.value = 'Daily Data';
-        return [
-          ChartData('Mon', 6),
-          ChartData('Tue', 12),
-          ChartData('Wed', 18),
-          ChartData('Thu', 24),
-          ChartData('Fri', 7),
-          ChartData('Sat', 10),
-          ChartData('Sun', 6),
-        ];
+        return ['Last 7 days', 'Last day'];
       case 1:
-        // data.value = 'Weekly Data';
-        return [
-          ChartData('Mon', 5),
-          ChartData('Tue', 10),
-          ChartData('Wed', 8),
-          ChartData('Thu', 20),
-          ChartData('Fri', 17),
-          ChartData('Sat', 11),
-          ChartData('Sun', 10),
-        ];
+        return ['Last Week', 'This Week'];
       case 2:
-        // data.value = 'Monthly Data';
+        return ['Last Month', 'This Month'];
+      default:
+        return [];
+    }
+  }
+
+  List<ChartData> getChartData(int index) {
+    switch (index) {
+      case 0: // Daily
+        return [
+          ChartData('12:00 AM - 4:00 AM', 6),
+          ChartData('4:00 AM - 8:00 AM', 12),
+          ChartData('8:00 AM - 12:00 PM', 18),
+          ChartData('12:00 PM - 4:00 PM', 24),
+          ChartData('4:00 PM - 8:00 PM', 7),
+          ChartData('8:00 PM - 12:00 AM', 6),
+        ];
+
+      case 1: // Weekly
         return [
           ChartData('Mon', 6),
           ChartData('Tue', 12),
@@ -41,6 +40,21 @@ class TabControllerController extends GetxController {
           ChartData('Fri', 7),
           ChartData('Sat', 10),
           ChartData('Sun', 6),
+        ];
+      case 2: // Monthly
+        return [
+          ChartData('Jan', 0),
+          ChartData('Feb', 30),
+          ChartData('Mar', 40),
+          ChartData('Apr', 50),
+          ChartData('May', 10),
+          ChartData('Jun', 1),
+          ChartData('Jul', 95),
+          ChartData('Aug', 35),
+          ChartData('Sep', 72),
+          ChartData('Oct', 5),
+          ChartData('Nov', 15),
+          ChartData('Dec', 10),
         ];
       default:
         data.value = '';
@@ -48,17 +62,15 @@ class TabControllerController extends GetxController {
     }
   }
 
-  // Initialize the chart data on controller initialization
-  @override
-  void onInit() {
-    super.onInit();
-    // Initialize with the first tab's data (for example, Daily Data)
-    getChartData(selectedTabIndex.value);
-  }
-
   // Update the selected tab index and refresh data
   void textChange(int index) {
     selectedTabIndex.value = index;
     getChartData(index);
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    getChartData(selectedTabIndex.value);
   }
 }

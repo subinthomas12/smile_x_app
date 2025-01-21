@@ -15,6 +15,7 @@ class PatientModal {
   final String patientResults;
   final String patientUsername;
   final String patientPassword;
+  // final int scheduleCountDown;
 
   PatientModal({
     required this.id,
@@ -33,6 +34,7 @@ class PatientModal {
     required this.patientResults,
     required this.patientUsername,
     required this.patientPassword,
+    // required this.scheduleCountDown,
   });
 
   factory PatientModal.fromJson(Map<String, dynamic> json) {
@@ -53,6 +55,7 @@ class PatientModal {
       patientResults: json['patient_results'],
       patientUsername: json['patient_username'],
       patientPassword: json['patient_password'],
+      // scheduleCountDown: json['schedule_count_down'],
     );
   }
 
@@ -74,6 +77,7 @@ class PatientModal {
       'patient_results': patientResults,
       'patient_username': patientUsername,
       'patient_password': patientPassword,
+      // 'schedule_count_down': scheduleCountDown,
     };
   }
 }
